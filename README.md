@@ -6,6 +6,7 @@ In this GitHub repository you will find rules in multiple languages:
 - Snort
 - Yara
 - IOC
+- ClamAV
 
 The rules are categorized and labeled into two release states:
 - Production: rules that are expected to perform with minimal tuning.
