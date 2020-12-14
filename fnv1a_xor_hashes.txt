@@ -2,7 +2,7 @@
 # You may not use this file except in compliance with the license. The license should have been received with this file. You may obtain a copy of the license at:
 # https://github.com/fireeye/sunburst_countermeasures/blob/main/LICENSE.txt
 
-FNV-1a 64bit then XOR by 6605813339339102567
+The following hashes are checked against processes, services, and drivers by SUNBURST. The hash is calculated by performing a FNV-1a 64bit hash of the lowercase string then XOR by 6605813339339102567.
 -------------------------------------------
 fekern 6274014997237900919 
 sense 16335643316870329598 
