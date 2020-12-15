@@ -69,37 +69,6 @@ rule APT_Backdoor_SUNBURST_2
     condition:
         ($a and $b and $c and $d and $e and $f and $h and $i) or ($j and $k and $l and $m and $n and $o and $p and $q and $r and $s and ($aa or $ab)) or ($t and $u and $v and $w and $x and $y and $z and ($aa or $ab)) or ($ac and $ad and $ae and $af and $ag and $ah and ($am or $an)) or ($ai and $aj and $ak and $al and ($am or $an))
 }
-rule APT_Webshell_SUPERNOVA_1
-{
-    meta:
-        author = "FireEye"
-        description = "SUPERNOVA is a .NET web shell backdoor masquerading as a legitimate SolarWinds web service handler. SUPERNOVA inspects and responds to HTTP requests with the appropriate HTTP query strings, Cookies, and/or HTML form values (e.g. named codes, class, method, and args). This rule is looking for specific strings and attributes related to SUPERNOVA."
-    strings:
-        $compile1 = "CompileAssemblyFromSource"
-        $compile2 = "CreateCompiler"
-        $context = "ProcessRequest"
-        $httpmodule = "IHttpHandler" ascii
-        $string1 = "clazz"
-        $string2 = "//NetPerfMon//images//NoLogo.gif" wide
-        $string3 = "SolarWinds" ascii nocase wide
-    condition:
-        uint16(0) == 0x5a4d and uint32(uint32(0x3C)) == 0x00004550 and filesize < 10KB and pe.imports("mscoree.dll","_CorDllMain") and $httpmodule and $context and all of ($compile*) and all of ($string*)
-}
-rule APT_Webshell_SUPERNOVA_2
-{
-    meta:
-        author = "FireEye"
-        description = "This rule is looking for specific strings related to SUPERNOVA. SUPERNOVA is a .NET web shell backdoor masquerading as a legitimate SolarWinds web service handler. SUPERNOVA inspects and responds to HTTP requests with the appropriate HTTP query strings, Cookies, and/or HTML form values (e.g. named codes, class, method, and args)."
-    strings:
-        $dynamic = "DynamicRun"
-        $solar = "Solarwinds" nocase
-        $string1 = "codes"
-        $string2 = "clazz"
-        $string3 = "method"
-        $string4 = "args"
-    condition:
-        uint16(0) == 0x5a4d and uint32(uint32(0x3C)) == 0x00004550 and filesize < 10KB and 3 of ($string*) and $dynamic and $solar
-}
 rule APT_Dropper_Raw64_TEARDROP_1
 {
     meta:
