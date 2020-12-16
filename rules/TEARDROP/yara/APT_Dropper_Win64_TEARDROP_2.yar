@@ -2,7 +2,7 @@
 // You may not use this file except in compliance with the license. The license should have been received with this file. You may obtain a copy of the license at:
 // https://github.com/fireeye/sunburst_countermeasures/blob/main/LICENSE.txt
 
-rule APT_Dropper_Win64_TEARDROP_1
+rule APT_Dropper_Win64_TEARDROP_2
 {
     meta:
         author = "FireEye"

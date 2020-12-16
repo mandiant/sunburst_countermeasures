@@ -1,7 +1,7 @@
 // Copyright 2020 by FireEye, Inc.
 // You may not use this file except in compliance with the license. The license should have been received with this file. You may obtain a copy of the license at:
 // https://github.com/fireeye/sunburst_countermeasures/blob/main/LICENSE.txt
-rule APT_Backdoor_SUNBURST_1
+rule APT_Backdoor_MSIL_SUNBURST_1
 {
     meta:
         author = "FireEye"

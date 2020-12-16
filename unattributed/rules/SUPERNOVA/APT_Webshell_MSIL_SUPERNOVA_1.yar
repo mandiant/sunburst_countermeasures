@@ -3,7 +3,7 @@
 // https://github.com/fireeye/sunburst_countermeasures/blob/main/LICENSE.txt
 import "pe"
 
-rule APT_Webshell_SUPERNOVA_1
+rule APT_Webshell_MSIL_SUPERNOVA_1
 {
     meta:
         author = "FireEye"

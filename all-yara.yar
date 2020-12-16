@@ -3,7 +3,7 @@
 // https://github.com/fireeye/sunburst_countermeasures/blob/main/LICENSE.txt
 import "pe"
 
-rule APT_Backdoor_SUNBURST_1
+rule APT_Backdoor_MSIL_SUNBURST_1
 {
     meta:
         author = "FireEye"
@@ -21,7 +21,7 @@ rule APT_Backdoor_SUNBURST_1
     condition:
         $fnv_xor and ($cmd_regex_encoded or $cmd_regex_plain) or ( ($fake_orion_event_encoded or $fake_orion_event_plain) and ($fake_orion_eventmanager_encoded or $fake_orion_eventmanager_plain) and ($fake_orion_message_encoded and $fake_orion_message_plain) )
 }
-rule APT_Backdoor_SUNBURST_2
+rule APT_Backdoor_MSIL_SUNBURST_2
 {
     meta:
         author = "FireEye"
@@ -69,54 +69,37 @@ rule APT_Backdoor_SUNBURST_2
     condition:
         ($a and $b and $c and $d and $e and $f and $h and $i) or ($j and $k and $l and $m and $n and $o and $p and $q and $r and $s and ($aa or $ab)) or ($t and $u and $v and $w and $x and $y and $z and ($aa or $ab)) or ($ac and $ad and $ae and $af and $ag and $ah and ($am or $an)) or ($ai and $aj and $ak and $al and ($am or $an))
 }
-rule APT_Webshell_SUPERNOVA_1
+rule APT_Backdoor_MSIL_SUNBURST_3
 {
     meta:
         author = "FireEye"
-        description = "SUPERNOVA is a .NET web shell backdoor masquerading as a legitimate SolarWinds web service handler. SUPERNOVA inspects and responds to HTTP requests with the appropriate HTTP query strings, Cookies, and/or HTML form values (e.g. named codes, class, method, and args). This rule is looking for specific strings and attributes related to SUPERNOVA."
+        description = "This rule is looking for certain portions of the SUNBURST backdoor that deal with C2 communications. SUNBURST is a backdoor that has the ability to spawn and kill processes, write and delete files, set and create registry keys, gather system information, and disable a set of forensic analysis tools and services."
     strings:
-        $compile1 = "CompileAssemblyFromSource"
-        $compile2 = "CreateCompiler"
-        $context = "ProcessRequest"
-        $httpmodule = "IHttpHandler" ascii
-        $string1 = "clazz"
-        $string2 = "//NetPerfMon//images//NoLogo.gif" wide
-        $string3 = "SolarWinds" ascii nocase wide
+        $sb1 = { 05 14 51 1? 0A 04 28 [2] 00 06 0? [0-16] 03 1F ?? 2E ?? 03 1F ?? 2E ?? 03 1F ?? 2E ?? 03 1F [1-32] 03 0? 05 28 [2] 00 06 0? [0-32] 03 [0-16] 59 45 06 }
+        $sb2 = { FE 16 [2] 00 01 6F [2] 00 0A 1? 8D [2] 00 01 [0-32] 1? 1? 7B 9? [0-16] 1? 1? 7D 9? [0-16] 6F [2] 00 0A 28 [2] 00 0A 28 [2] 00 0A [0-32] 02 7B [2] 00 04 1? 6F [2] 00 0A [2-32] 02 7B [2] 00 04 20 [4] 6F [2] 00 0A [0-32] 13 ?? 11 ?? 11 ?? 6E 58 13 ?? 11 ?? 11 ?? 9? 1? [0-32] 60 13 ?? 0? 11 ?? 28 [4] 11 ?? 11 ?? 9? 28 [4] 28 [4-32] 9? 58 [0-32] 6? 5F 13 ?? 02 7B [2] 00 04 1? ?? 1? ?? 6F [2] 00 0A 8D [2] 00 01 }
+        $ss1 = "\x00set_UseShellExecute\x00"
+        $ss2 = "\x00ProcessStartInfo\x00"
+        $ss3 = "\x00GetResponseStream\x00"
+        $ss4 = "\x00HttpWebResponse\x00"
     condition:
-        uint16(0) == 0x5a4d and uint32(uint32(0x3C)) == 0x00004550 and filesize < 10KB and pe.imports("mscoree.dll","_CorDllMain") and $httpmodule and $context and all of ($compile*) and all of ($string*)
+        (uint16(0) == 0x5A4D and uint32(uint32(0x3C)) == 0x00004550) and all of them
 }
-rule APT_Webshell_SUPERNOVA_2
+rule APT_Backdoor_MSIL_SUNBURST_4
 {
     meta:
         author = "FireEye"
-        description = "This rule is looking for specific strings related to SUPERNOVA. SUPERNOVA is a .NET web shell backdoor masquerading as a legitimate SolarWinds web service handler. SUPERNOVA inspects and responds to HTTP requests with the appropriate HTTP query strings, Cookies, and/or HTML form values (e.g. named codes, class, method, and args)."
+        description = "This rule is looking for specific methods used by the SUNBURST backdoor. SUNBURST is a backdoor that has the ability to spawn and kill processes, write and delete files, set and create registry keys, gather system information, and disable a set of forensic analysis tools and services."
     strings:
-        $dynamic = "DynamicRun"
-        $solar = "Solarwinds" nocase
-        $string1 = "codes"
-        $string2 = "clazz"
-        $string3 = "method"
-        $string4 = "args"
+        $ss1 = "\x00set_UseShellExecute\x00"
+        $ss2 = "\x00ProcessStartInfo\x00"
+        $ss3 = "\x00GetResponseStream\x00"
+        $ss4 = "\x00HttpWebResponse\x00"
+        $ss5 = "\x00ExecuteEngine\x00"
+        $ss6 = "\x00ParseServiceResponse\x00"
+        $ss7 = "\x00RunTask\x00"
+        $ss8 = "\x00CreateUploadRequest\x00"
     condition:
-        uint16(0) == 0x5a4d and uint32(uint32(0x3C)) == 0x00004550 and filesize < 10KB and 3 of ($string*) and $dynamic and $solar
-}
-rule APT_HackTool_PS1_COSMICGALE_1
-{
-    meta:
-        author = "FireEye"
-        description = "This rule detects various unique strings related to COSMICGALE. COSMICGALE is a credential theft and reconnaissance PowerShell script that collects credentials using the publicly available Get-PassHashes routine. COSMICGALE clears log files, writes acquired data to a hard coded path, and encrypts the file with a password."
-    strings:
-        $sr1 = /\[byte\[\]\]@\([\x09\x20]{0,32}0xaa[\x09\x20]{0,32},[\x09\x20]{0,32}0xd3[\x09\x20]{0,32},[\x09\x20]{0,32}0xb4[\x09\x20]{0,32},[\x09\x20]{0,32}0x35[\x09\x20]{0,32},/ ascii nocase wide
-        $sr2 = /\[bitconverter\]::toint32\(\$\w{1,64}\[0x0c..0x0f\][\x09\x20]{0,32},[\x09\x20]{0,32}0\)[\x09\x20]{0,32}\+[\x09\x20]{0,32}0xcc\x3b/ ascii nocase wide
-        $sr3 = /\[byte\[\]\]\(\$\w{1,64}\.padright\(\d{1,2}\)\.substring\([\x09\x20]{0,32}0[\x09\x20]{0,32},[\x09\x20]{0,32}\d{1,2}\)\.tochararray\(\)\)/ ascii nocase wide
-        $ss1 = "[text.encoding]::ascii.getbytes(\"ntpassword\x600\");" ascii nocase wide
-        $ss2 = "system\\currentcontrolset\\control\\lsa\\$_" ascii nocase wide
-        $ss3 = "[security.cryptography.md5]::create()" ascii nocase wide
-        $ss4 = "[system.security.principal.windowsidentity]::getcurrent().name" ascii nocase wide
-        $ss5 = "out-file" ascii nocase wide
-        $ss6 = "convertto-securestring" ascii nocase wide
-    condition:
-        all of them
+        (uint16(0) == 0x5A4D and uint32(uint32(0x3C)) == 0x00004550) and all of them
 }
 rule APT_Dropper_Raw64_TEARDROP_1
 {
@@ -130,7 +113,7 @@ rule APT_Dropper_Raw64_TEARDROP_1
     condition:
         all of them
 }
-rule APT_Dropper_Win64_TEARDROP_1
+rule APT_Dropper_Win64_TEARDROP_2
 {
     meta:
         author = "FireEye"

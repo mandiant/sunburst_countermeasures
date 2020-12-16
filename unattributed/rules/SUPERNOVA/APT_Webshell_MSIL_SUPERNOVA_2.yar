@@ -2,7 +2,7 @@
 // You may not use this file except in compliance with the license. The license should have been received with this file. You may obtain a copy of the license at:
 // https://github.com/fireeye/sunburst_countermeasures/blob/main/LICENSE.txt
 
-rule APT_Webshell_SUPERNOVA_2
+rule APT_Webshell_MSIL_SUPERNOVA_2
 {
     meta:
         author = "FireEye"
