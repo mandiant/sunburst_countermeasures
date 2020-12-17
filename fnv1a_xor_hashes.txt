@@ -5,6 +5,7 @@
 The following hashes are checked against processes, services, and drivers by SUNBURST. The hash is calculated by performing a FNV-1a 64bit hash of the lowercase string then XOR by 6605813339339102567.
 -------------------------------------------
 
+100-continue 1475579823244607677
 accept 2734787258623754862
 afwserv 1368907909245890092
 apac.lab 16858955978146406642
@@ -117,6 +118,7 @@ hiew32 13260224381505715848
 idaq 14256853800858727521
 idaq64 8709004393777297355
 idr 8129411991672431889
+if-modified-since 15514036435533858158
 ildasm 15997665423159927228
 ilspy 10829648878147112121
 jd-gui 9149947745824492274
